@@ -1,0 +1,46 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+out/
+dist/
+*.vsix
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage / test artifacts
+.coverage/
+coverage/
+cover/
+
+# VS Code test & debug
+.vscode-test/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+
+# Webpack cache
+.cache/
+
+# NPM cache (rare but safe)
+.npm/
+
+# Editor backups
+*.swp
+*.swo
