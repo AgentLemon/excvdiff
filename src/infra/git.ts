@@ -38,6 +38,30 @@ export async function runGitLog(cwd: string, limit: number) {
   return stdout;
 }
 
+export async function runGitBranches(cwd: string) {
+  const gitPath = await getGitExecutable();
+
+  const { stdout } = await execFileAsync(
+    gitPath,
+    ["branch", "--format=%(refname:short)"],
+    { cwd },
+  );
+
+  return stdout;
+}
+
+export async function runGitRevParse(cwd: string) {
+  const gitPath = await getGitExecutable();
+
+  const { stdout } = await execFileAsync(
+    gitPath,
+    ["rev-parse", "--abbrev-ref", "origin/HEAD"],
+    { cwd },
+  );
+
+  return stdout;
+}
+
 async function getGitExecutable(): Promise<string> {
   const gitExtension = vscode.extensions.getExtension("vscode.git")?.exports;
 

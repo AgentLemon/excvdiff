@@ -3,21 +3,35 @@ import { getFileDiffs } from "../lib/gitDiff";
 import { getExcoverallsCoverageMap } from "../lib/excoveralls";
 import { renderDiffsHtml } from "../views/coverage";
 import { getRecentCommits } from "../lib/gitLog";
+import { getBranches } from "../lib/gitBranches";
 
-export async function showDiffCoverage(): Promise<void> {
-  const ws = vscode.workspace.workspaceFolders?.[0];
-  if (!ws) {
-    vscode.window.showErrorMessage("No workspace folder is open.");
-    return;
+export async function showDiffCoverageCommit(): Promise<void> {
+  const path = getWorkspacePath();
+
+  if (path) {
+    const picked = await pickBaseCommit(path)
+
+    if (picked) {
+      showDiffCoverage(path, picked.commit.hash);
+    }
   }
+}
 
-  const path = ws.uri.fsPath
+export async function showDiffCoverageBranch(): Promise<void> {
+  const path = getWorkspacePath();
 
-  const picked = await pickBaseCommit(path)
-  if (!picked) return;
+  if (path) {
+    const picked = await pickBaseBranch(path)
 
+    if (picked) {
+      showDiffCoverage(path, picked.branch);
+    }
+  }
+}
+
+async function showDiffCoverage(path: string, picked: string): Promise<void> {
   const coverageMap = await getExcoverallsCoverageMap(path);
-  let diffs = await getFileDiffs(path, picked.commit.hash);
+  let diffs = await getFileDiffs(path, picked);
   diffs = diffs.filter((diff) => coverageMap.get(diff.filename));
 
   diffs.forEach((diff) => {
@@ -59,4 +73,33 @@ async function pickBaseCommit(path: string) {
   );
 
   return picked;
+}
+
+async function pickBaseBranch(path: string) {
+  const branches = await getBranches(path);
+
+  const picked = await vscode.window.showQuickPick(
+    branches.map((b) => ({
+      label: b,
+      branch: b,
+    })),
+    {
+      title: "Select base branch for diff",
+      placeHolder: "Type to filter branches",
+      matchOnDescription: true,
+      matchOnDetail: true,
+    }
+  );
+
+  return picked;
+}
+
+function getWorkspacePath(): string | undefined {
+  const ws = vscode.workspace.workspaceFolders?.[0];
+  if (!ws) {
+    vscode.window.showErrorMessage("No workspace folder is open.");
+    return;
+  }
+
+  return ws.uri.fsPath
 }

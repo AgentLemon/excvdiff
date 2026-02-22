@@ -62,6 +62,11 @@ Choose a commit from the dropdown. The extension will compare: `Selected Commit 
 
 ## Development
 
+```
+yarn
+yarn run webpack --watch
+```
+
 ### Build extension
 
 ```

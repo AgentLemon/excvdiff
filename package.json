@@ -2,7 +2,7 @@
   "name": "excvdiff",
   "displayName": "excvdiff",
   "description": "Shows diff test coverage using git diff and ./cover/coveralls.json",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -15,8 +15,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "excvdiff.showDiffCoverage",
-        "title": "[excvdiff] Show Diff Coverage"
+        "command": "excvdiff.showDiffCoverageCommit",
+        "title": "[excvdiff] Show Diff Coverage with commit"
+      },
+      {
+        "command": "excvdiff.showDiffCoverageBranch",
+        "title": "[excvdiff] Show Diff Coverage with branch"
       }
     ]
   },
